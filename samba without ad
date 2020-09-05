@@ -1,0 +1,41 @@
+[global]
+#имя сервера
+server string = samba
+#рабочая группа для отображения в windows
+workgroup = WORKGROUP
+#роль сервера
+server role = standalone server
+
+#Указываем тип авторизации
+security = user
+#Указываем тип БД пользователей.
+passdb backend = tdbsam
+#Принудительно разрешаем шифрованние паролей. Это хорошо для безопасности.
+encrypt passwords = yes
+#Такой строкой мы запрещаем гостевой вход. В среде windows есть специальный пользователь для гостевых подключений и входа на компьютеры
+map to guest = bad user
+#Логи
+log file = /var/log/samba/log.%m
+
+#Расшаренные папки
+#Для гостя без пароля
+[guest]
+comment = first test share
+path = /opt/share1
+browseable = yes
+writeable = yes
+guest ok = yes
+read only = no
+create mask = 0775
+directory mask = 0775
+
+#Для авторизованных пользователей. Создается группа smbgroup и создаются пользователи в ней командой smbpasswd -a "имя нового пользователя"
+[test]
+comment = first test share
+path = /opt/share2
+valid users = @smbgroup
+browseable = yes
+writeable = yes
+guest ok = no
+create mask = 0775
+directory mask = 0775
